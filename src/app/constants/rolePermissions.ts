@@ -1,0 +1,38 @@
+export const ROLES = [{ name: "VENDOR" }, { name: "ADMIN" }];
+
+export const PERMISSIONS = {
+  USER: ["UPDATE_USER", "READ_USER", "DELETE_USER"],
+  HOTEL: ["CREATE_HOTEL", "READ_HOTEL", "UPDATE_HOTEL", "DELETE_HOTEL"],
+  ROOM: ["CREATE_ROOM", "READ_ROOM", "UPDATE_ROOM", "DELETE_ROOM"],
+  ROLE: ["CREATE_ROLE", "READ_ROLE", "UPDATE_ROLE", "DELETE_ROLE"],
+  VENDOR_STAFF: [
+    "CREATE_VENDOR_STAFF",
+    "READ_VENDOR_STAFF",
+    "UPDATE_VENDOR_STAFF",
+    "DELETE_VENDOR_STAFF",
+  ],
+  ADMIN_STAFF: [
+    "CREATE_ADMIN_STAFF",
+    "READ_ADMIN_STAFF",
+    "UPDATE_ADMIN_STAFF",
+    "DELETE_ADMIN_STAFF",
+  ],
+};
+
+export const FLAT_PERMISSIONS = Object.entries(PERMISSIONS).flatMap(
+  ([module, perms]) =>
+    perms.map((name) => ({
+      name,
+      module,
+    })),
+);
+
+export const ROLE_PERMISSION_MAP = {
+  VENDOR: [
+    ...PERMISSIONS.HOTEL,
+    ...PERMISSIONS.ROOM,
+    ...PERMISSIONS.ROLE,
+    ...PERMISSIONS.VENDOR_STAFF,
+  ],
+  ADMIN: [...PERMISSIONS.USER, ...PERMISSIONS.ROLE, ...PERMISSIONS.ADMIN_STAFF],
+};

@@ -1,0 +1,11 @@
+model HotelFAQ {
+  id        String    @id @default(uuid())
+  hotelId   String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  question  String
+  answer    String?
+  status    FAQStatus @default(PENDING)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

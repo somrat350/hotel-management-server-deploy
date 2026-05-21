@@ -1,0 +1,34 @@
+model Review {
+  id         String @id @default(uuid())
+  customerId String // Commenter ID
+  hotelId    String //  room/owner comment
+  bookingId  String? @unique
+
+  // Overall Rating
+  rating Float @default(0)
+
+  // Category Ratings
+  rating_staff       Float @default(0)
+  rating_facilities  Float @default(0)
+  rating_cleanliness Float @default(0)
+  rating_value       Float @default(0)
+  rating_location    Float @default(0)
+
+  comment String
+
+  //Self Relations (Replies) 
+  parentId String? // Reply 
+  parent   Review?  @relation("ReviewReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Review[] @relation("ReviewReplies")
+
+  // 1. User relation fixed (using customer_id)
+  user User @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  // 2. New relations added for Hotel, Room, and Booking
+  hotel       Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  booking     Booking?  @relation(fields: [bookingId], references: [id])
+  // Time & Status
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

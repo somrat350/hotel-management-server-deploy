@@ -1,0 +1,70 @@
+model Hotel {
+  id          String   @id @default(uuid())
+  vendorId    String
+  creatorId   String
+  name        String
+  description String?
+  image       String[] @default([])
+  creator     User   @relation(fields: [creatorId], references: [id])
+  owner       Vendor @relation(fields: [vendorId], references: [id])
+  status HotelStatus @default(ACTIVE)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  rooms      Room[]
+  bookings   Booking[]
+  commission Commission[]
+  // Relations
+  location   Location?
+  amenities  Amenities?
+  reviews    Review[]
+
+  conversations Conversation[]
+}
+
+model Room {
+  id      String @id @default(uuid())
+  hotelId String
+
+  name        String // Deluxe, Suite, etc.
+  capacity    Int
+  description String
+  basePrice   Float
+  bedType     String
+  size        Float?
+  amenities   Amenity[]
+  images      String[]
+
+  status RoomStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // RELATIONS
+  hotel Hotel @relation(fields: [hotelId], references: [id])
+}
+
+model Location {
+  id        String @id @default(uuid())
+  country   String
+  city      String
+  address   String
+  latitude  Float
+  longitude Float
+  hotelId   String @unique
+
+  hotel Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+}
+
+model Amenities {
+  id        String  @id @default(uuid())
+  wifi      Boolean @default(false)
+  parking   Boolean @default(false)
+  pool      Boolean @default(false)
+  gym       Boolean @default(false)
+  resturant Boolean @default(false)
+
+  hotelId String @unique
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+}

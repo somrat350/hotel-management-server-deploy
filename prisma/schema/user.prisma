@@ -1,0 +1,113 @@
+model Session {
+  id                 String   @id @default(uuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id])
+  hashedRefreshToken String   @unique
+  ip                 String
+  userAgent          String
+  expiresAt          DateTime
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  phone         String
+  password      String
+  avatar        String?
+  avatarId      String?
+  status        UserStatus     @default(ACTIVE)
+  isVerified    Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  bookings      Booking[]
+  payments      Payment[]
+  sessions      Session[]
+  hotelFAQs     HotelFAQ[]
+  vendors       Vendor[]
+  admins        Admin[]
+  conversations Conversation[]
+  messages      Message[]
+  reviews       Review[]
+  vendorStaff   VendorStaff?
+  hotel         Hotel[]
+}
+
+model Vendor {
+  id           String        @id @default(uuid())
+  userId       String        @unique
+  roleId       String
+  user         User          @relation(fields: [userId], references: [id])
+  role         Role          @relation(fields: [roleId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  vendorStaffs VendorStaff[]
+  hotel        Hotel[]
+}
+
+model VendorStaff {
+  id        String   @id @default(uuid())
+  ownerId   String
+  userId    String   @unique
+  roleId    String
+  owner     Vendor   @relation(fields: [ownerId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  roleId    String
+  user      User     @relation(fields: [userId], references: [id])
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id              String           @id @default(uuid())
+  name            String
+  creatorId       String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+  vendors         Vendor[]
+  vendorStaffs    VendorStaff[]
+  admins          Admin[]
+
+  @@unique([name, creatorId])
+  @@index([creatorId])
+}
+
+model Permission {
+  id                  String               @id @default(uuid())
+  name                String               @unique
+  module              String
+  rolePermissions     RolePermission[]
+  disabledPermissions DisabledPermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@unique([roleId, permissionId])
+}
+
+model DisabledPermission {
+  id           String     @id @default(uuid())
+  userId       String
+  roleId       String
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@unique([userId, roleId, permissionId])
+}

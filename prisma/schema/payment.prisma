@@ -1,0 +1,38 @@
+// --- DYNAMIC PAYMENT SYSTEM ---
+model Payment {
+  id          String        @id @default(uuid())
+  userId      String // Payer (Guest or Vendor)
+  amount      Float
+  currency    String        @default("BDT")
+  paymentType String
+  status      PaymentStatus @default(PENDING)
+
+  user User @relation(fields: [userId], references: [id])
+
+  // Dynamic link tables
+  bookingPayments    BookingPayment[]
+  commissionPayments CommissionPayment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BookingPayment {
+  id        String @id @default(uuid())
+  transId   String @unique // Critical for SSLCommerz callback lookup
+  paymentId String
+  productId String
+
+  payment Payment @relation(fields: [paymentId], references: [id])
+  booking Booking @relation(fields: [productId], references: [id])
+}
+
+model CommissionPayment {
+  id        String @id @default(uuid())
+  transId   String @unique // Critical for SSLCommerz callback lookup
+  paymentId String
+  productId String
+
+  payment    Payment    @relation(fields: [paymentId], references: [id])
+  commission Commission @relation(fields: [productId], references: [id])
+}

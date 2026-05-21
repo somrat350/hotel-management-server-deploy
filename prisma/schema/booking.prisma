@@ -1,0 +1,18 @@
+model Booking {
+  id              String           @id @default(uuid())
+  userId          String
+  hotelId         String
+  roomId          String
+  checkIn         DateTime
+  checkOut        DateTime
+  totalPrice      Float
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  status          BookingStatus    @default(PENDING)
+  // Relations
+  user            User             @relation(fields: [userId], references: [id])
+  hotel           Hotel            @relation(fields: [hotelId], references: [id])
+  bookingPayments BookingPayment[]
+  commission      Commission[]
+  review          Review?
+}

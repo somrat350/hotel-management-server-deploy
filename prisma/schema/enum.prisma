@@ -1,0 +1,64 @@
+// Hotel Related Enum
+enum Currency {
+  BDT
+  USDT
+}
+
+enum HotelStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum RoomStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPEND
+}
+
+enum SystemLevel {
+  SUPER_ADMIN
+  ADMIN
+  VENDOR
+  CUSTOMER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+enum FAQStatus {
+  PENDING
+  ANSWERED
+  HIDDEN
+}
+
+enum ConversationType {
+  USER_HOTEL
+  VENDOR_ADMIN
+}
+
+enum Amenity {
+  WIFI
+  AC
+  TV
+  PARKING
+  BREAKFAST
+  POOL
+  GYM
+  ROOM_SERVICE
+}

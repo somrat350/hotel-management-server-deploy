@@ -1,0 +1,37 @@
+model Conversation {
+  id      String           @id @default(uuid())
+  hotelId String
+  userId  String
+  type    ConversationType
+
+  messages Message[]
+
+  lastMessageId String?
+  lastMessage   Message? @relation("LastMessage", fields: [lastMessageId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  hotel Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([hotelId, userId])
+  @@index([hotelId])
+  @@index([userId])
+}
+
+model Message {
+  id             String @id @default(uuid())
+  conversationId String
+  senderId       String
+
+  text String?
+
+  createdAt DateTime @default(now())
+
+  conversation  Conversation   @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversations Conversation[] @relation("LastMessage")
+  sender        User           @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+}
