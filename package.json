@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
-    "build": "pnpm install && prisma generate && tsc",
+    "build": "pnpm install && prisma generate && tsup src/server.ts --format esm --clean --out-dir dist",
     "start": "node dist/server.js",
     "postinstall": "prisma generate",
     "seed:superAdmin": "tsx src/app/seed/superAdmin.seed.ts",
@@ -32,6 +32,7 @@
     "@types/pg": "^8.20.0",
     "esbuild": "^0.28.0",
     "prisma": "^7.6.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   },
